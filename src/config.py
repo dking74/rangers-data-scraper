@@ -2,7 +2,10 @@ from configparser import ConfigParser
 
 def config(filename='database.ini', section='postgres') -> dict:
   '''
+  Read the config from an .ini file and store that into dictionary.
+
   @see https://www.postgresqltutorial.com/postgresql-python/connect/
+  @returns The dict containing config params
   '''
   
   parser = ConfigParser()

@@ -7,8 +7,12 @@ name = "pypi"
 bs4 = "*"
 requests = "*"
 configparser = "*"
+psycopg2 = "*"
 
 [dev-packages]
+
+[scripts]
+start = "python3 ./src/main.py"
 
 [requires]
 python_version = "3.8"
