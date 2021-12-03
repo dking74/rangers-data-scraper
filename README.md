@@ -10,3 +10,6 @@ database=
 user=
 password=
 ```
+
+## Database
+The UML diagram for database construction is located at [Database Design](./docs/database_design.png). To be able to replicate the database design in PostgresSQL, run the [DDL Script](./data/ddl.sql).
