@@ -1,4 +1,4 @@
-from player_year_result import *
+from src.queries.player_year_result import *
 
 def insertPlayerQuery(player):
   '''

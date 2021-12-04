@@ -1,6 +1,6 @@
 import psycopg2
 
-from variables import database_config
+from src.variables import database_config
 
 def connect():
   '''

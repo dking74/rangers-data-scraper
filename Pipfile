@@ -5,14 +5,14 @@ name = "pypi"
 
 [packages]
 bs4 = "*"
-requests = "*"
 configparser = "*"
 psycopg2 = "*"
+requests-futures = "*"
 
 [dev-packages]
 
 [scripts]
-start = "python3 ./src/main.py"
+loadAll = "python3 main.py"
 
 [requires]
 python_version = "3.8"

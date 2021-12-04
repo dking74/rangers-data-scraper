@@ -1,5 +1,5 @@
-from readHtml import loadHtml
-from variables import years
+from src.loadHtml import loadHtml
+from src.variables import years
 
 def loadPlayerData():
   '''

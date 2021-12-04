@@ -1,4 +1,4 @@
-from config import config
+from src.config import config
 
 # Main config dictionaries
 database_config = config()

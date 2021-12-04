@@ -1,8 +1,6 @@
 #!/usr/bin/python3
-from scapers.loadRoster import loadPlayerData
-
 def main():
-  loadPlayerData()
+  import src.data_loaders.Roster
 
 if __name__ == '__main__':
   main()

@@ -1,10 +1,11 @@
-def getPlayerIdByFirstAndLast(first_name, last_name):
+def getPlayerFromRoster(first_name, last_name, year):
   '''
-  Get the player id by the user first_name and last_name
   '''
 
   return '''
-SELECT player_id
-FROM public."Player"
-WHERE first_name = '{0}' AND last_name = '{1}
-'''.format(first_name, last_name)
+SELECT Roster.player_id
+FROM public."Roster" Roster
+INNER JOIN public."Player" Player
+ON Roster.player_id = Player.player_id
+WHERE Player.first_name = {0} AND Player.last_name = {1} AND Roster.year = {2}
+'''.format(first_name, last_name, year)
