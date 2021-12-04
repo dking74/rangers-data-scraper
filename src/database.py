@@ -1,6 +1,6 @@
 import psycopg2
 
-from config import config
+from variables import database_config
 
 def connect():
   '''
@@ -12,7 +12,7 @@ def connect():
 
   conn = None
   try:
-    _config = config()
+    _config = database_config
     print('Connecting to the PostgreSQL database...')
     
     conn = psycopg2.connect(**_config)

@@ -11,7 +11,7 @@ CREATE TABLE IF NOT EXISTS public."Player"
     age integer NOT NULL,
     dob date NOT NULL,
     country character varying(2) COLLATE pg_catalog."default" DEFAULT 'US',
-    "position" character(2) COLLATE pg_catalog."default",
+    "position" text COLLATE pg_catalog."default",
     bats character(1) COLLATE pg_catalog."default" DEFAULT 'R',
     throws character(1) COLLATE pg_catalog."default" DEFAULT 'R',
     height character varying(10) COLLATE pg_catalog."default",
@@ -29,6 +29,8 @@ TABLESPACE pg_default;
 
 ALTER TABLE IF EXISTS public."Player"
     OWNER to postgres;
+
+CREATE INDEX IF NOT EXISTS idx_full_name_player ON public."Player" (first_name, last_name);
 
 
 -- Table: public.Roster
@@ -81,7 +83,7 @@ CREATE TABLE IF NOT EXISTS public."PlayerBatYearResult"
     obp numeric(3,3) DEFAULT 0,
     slg numeric(3,3) DEFAULT 0,
     ops numeric(3,3) DEFAULT 0,
-    ops_plus numeric(3,3) DEFAULT 0,
+    ops_plus integer DEFAULT 0,
     total_bases integer DEFAULT 0,
     gdp integer DEFAULT 0,
     hbp integer DEFAULT 0,
@@ -105,7 +107,6 @@ CREATE TABLE IF NOT EXISTS public."PlayerBatYearResult"
     CONSTRAINT "ibb >= 0" CHECK (ibb >= 0),
     CONSTRAINT "obp >= 0" CHECK (obp >= 0::numeric),
     CONSTRAINT "ops >= 0" CHECK (ops >= 0::numeric),
-    CONSTRAINT "ops_plus >= 0" CHECK (ops_plus >= 0::numeric),
     CONSTRAINT "plate_appearances >= 0" CHECK (plate_appearances >= 0),
     CONSTRAINT "rbis >= 0" CHECK (rbis >= 0),
     CONSTRAINT "runs >= 0" CHECK (runs >= 0),
@@ -149,7 +150,7 @@ CREATE TABLE IF NOT EXISTS public."TeamBatYearResult"
     obp numeric(3,3) DEFAULT 0,
     slg numeric(3,3) DEFAULT 0,
     ops numeric(3,3) DEFAULT 0,
-    ops_plus numeric(3,3) DEFAULT 0,
+    ops_plus integer DEFAULT 0,
     total_bases integer DEFAULT 0,
     gdp integer DEFAULT 0,
     hbp integer DEFAULT 0,
@@ -169,7 +170,6 @@ CREATE TABLE IF NOT EXISTS public."TeamBatYearResult"
     CONSTRAINT "ibb >= 0" CHECK (ibb >= 0),
     CONSTRAINT "obp >= 0" CHECK (obp >= 0::numeric),
     CONSTRAINT "ops >= 0" CHECK (ops >= 0::numeric),
-    CONSTRAINT "ops_plus >= 0" CHECK (ops_plus >= 0::numeric),
     CONSTRAINT "plate_appearances >= 0" CHECK (plate_appearances >= 0),
     CONSTRAINT "rbis >= 0" CHECK (rbis >= 0),
     CONSTRAINT "runs >= 0" CHECK (runs >= 0),
