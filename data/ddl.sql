@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS public."Player"
     bats character(1) COLLATE pg_catalog."default" DEFAULT 'R',
     throws character(1) COLLATE pg_catalog."default" DEFAULT 'R',
     height character varying(10) COLLATE pg_catalog."default",
-    weight numeric(3,2),
+    weight numeric(5,2),
     years integer,
     CONSTRAINT "Player_pkey" PRIMARY KEY (player_id),
     CONSTRAINT "First/Last/DOB" UNIQUE (first_name, last_name, dob),
