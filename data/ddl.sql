@@ -460,6 +460,8 @@ TABLESPACE pg_default;
 ALTER TABLE IF EXISTS public."Game"
     OWNER to postgres;
 
+CREATE INDEX IF NOT EXISTS idx_game_year_num ON public."Game" (year, game_number);
+
 
 -- Table: public.PlayerBatGameStat
 
@@ -731,29 +733,6 @@ ALTER TABLE IF EXISTS public."TeamYearSplit"
     OWNER to postgres;
 
 
--- Table: public.TeamPostseasonResult
-
--- DROP TABLE IF EXISTS public."TeamPostseasonResult";
-
-CREATE TABLE IF NOT EXISTS public."TeamPostseasonResult"
-(
-    team_postseason_result_id serial NOT NULL,
-    year integer NOT NULL,
-    series_name text COLLATE pg_catalog."default" NOT NULL,
-    opponent text COLLATE pg_catalog."default" NOT NULL,
-    result text COLLATE pg_catalog."default" NOT NULL DEFAULT 'win'::text,
-    CONSTRAINT "TeamPostseasonResult_pkey" PRIMARY KEY (team_postseason_result_id),
-    CONSTRAINT "Unique_postseason_result_year_series_name" UNIQUE (year, series_name),
-    CONSTRAINT "result = 'win' or result = 'loss'" CHECK (result = 'win'::text OR result = 'loss'::text),
-    CONSTRAINT "year >= 1900" CHECK (year >= 1900)
-)
-
-TABLESPACE pg_default;
-
-ALTER TABLE IF EXISTS public."TeamPostseasonResult"
-    OWNER to postgres;
-
-
 -- Table: public.TeamResult
 
 -- DROP TABLE IF EXISTS public."TeamResult";
@@ -767,13 +746,8 @@ CREATE TABLE IF NOT EXISTS public."TeamResult"
     ties integer DEFAULT 0,
     division_place integer,
     attendance integer DEFAULT 0,
-    team_postseason_result_id integer,
     CONSTRAINT "TeamResult_pkey" PRIMARY KEY (team_result_id),
     CONSTRAINT "Unique_team_result_year" UNIQUE (year),
-    CONSTRAINT "Team_result_postseason_id" FOREIGN KEY (team_postseason_result_id)
-        REFERENCES public."TeamPostseasonResult" (team_postseason_result_id) MATCH SIMPLE
-        ON UPDATE NO ACTION
-        ON DELETE SET NULL,
     CONSTRAINT "attendance >= 0" CHECK (attendance >= 0),
     CONSTRAINT "division_place >= 1 and division_place <= 10" CHECK (division_place >= 1 AND division_place <= 10),
     CONSTRAINT "losses >= 0" CHECK (losses >= 0),
@@ -785,4 +759,30 @@ CREATE TABLE IF NOT EXISTS public."TeamResult"
 TABLESPACE pg_default;
 
 ALTER TABLE IF EXISTS public."TeamResult"
+    OWNER to postgres;
+
+
+-- Table: public.TeamPostseasonResult
+
+-- DROP TABLE IF EXISTS public."TeamPostseasonResult";
+
+CREATE TABLE IF NOT EXISTS public."TeamPostseasonResult"
+(
+    team_postseason_result_id serial NOT NULL,
+    team_result_id integer NOT NULL,
+    series_name text COLLATE pg_catalog."default" NOT NULL,
+    opponent text COLLATE pg_catalog."default" NOT NULL,
+    result text COLLATE pg_catalog."default" NOT NULL DEFAULT 'win'::text,
+    CONSTRAINT "TeamPostseasonResult_pkey" PRIMARY KEY (team_postseason_result_id),
+    CONSTRAINT "Player_id_fk" FOREIGN KEY (team_result_id)
+        REFERENCES public."TeamResult" (team_result_id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE CASCADE,
+    CONSTRAINT "Unique_postseason_result_year_series_name" UNIQUE (team_result_id, series_name),
+    CONSTRAINT "result = 'win' or result = 'loss'" CHECK (result = 'win'::text OR result = 'loss'::text)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public."TeamPostseasonResult"
     OWNER to postgres;
