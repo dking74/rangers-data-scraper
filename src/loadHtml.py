@@ -1,6 +1,7 @@
 from bs4 import BeautifulSoup
 
 from src.requests import getHtmlData, getAllData
+from src.variables import years, team_roster_url
 
 def loadAllHtml(urlMapping):
   '''
@@ -26,3 +27,20 @@ def loadHtml(htmlUrl):
 
   html = getHtmlData(htmlUrl)
   return BeautifulSoup(html, features="html.parser")
+
+# Global to not have to load html page more than once
+# and return the cached version while in same script run.
+team_roster_data_html = None
+def loadTeamRosterHtml():
+  '''Load html for the home page of team for all years'''
+
+  global team_roster_data_html
+
+  if team_roster_data_html is not None:
+    return team_roster_data_html
+
+  year_dict = {}
+  for year in years:
+    year_dict[year] = team_roster_url.format(year=year)
+  team_roster_data_html = loadAllHtml(year_dict)
+  return team_roster_data_html

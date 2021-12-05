@@ -3,6 +3,7 @@ from requests_futures.sessions import FuturesSession
 
 defaultSession = FuturesSession(max_workers=10)
 
+
 def getAllData(dataDict, max_workers=10):
   '''
   Get data for a dictionary of entries.

@@ -1,5 +1,4 @@
-from src.loadHtml import loadAllHtml
-from src.variables import years
+from src.loadHtml import loadTeamRosterHtml
 
 def setPlayerDefaults(first_name: str = '', last_name: str = ''):
   return {
@@ -17,21 +16,19 @@ def setPlayerDefaults(first_name: str = '', last_name: str = ''):
     'position': ''
   }
 
-def getPlayersByYear() -> dict:
+def getPlayersByYear(year_team_roster_data: dict = None) -> dict:
   '''
   Create references to certain players to be saved in a dictionary to
   allow use by other player methods to get the players data attributes.
   '''
 
-  year_dict = {}
-  for year in years:
-    year_dict[year] = 'https://www.baseball-reference.com/teams/TEX/{0}-roster.shtml'.format(year)
-  data = loadAllHtml(year_dict)
+  if year_team_roster_data is None:
+    year_team_roster_data = loadTeamRosterHtml()
 
   # Go through each entry of soup content loaded from remote resource
   # and create a Player entry found from within html
   player_roster_data = {}
-  for year, soup in data.items():
+  for year, soup in year_team_roster_data.items():
     players_data = {}
     players_rows = soup.select('#all_appearances #div_appearances #appearances tbody tr')
     for player_row in players_rows:
@@ -78,6 +75,3 @@ def getPlayersByYear() -> dict:
 
     player_roster_data[year] = players_data
   return player_roster_data
-
-
-# def loadCoachingStaff():

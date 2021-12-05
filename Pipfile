@@ -13,6 +13,8 @@ requests-futures = "*"
 
 [scripts]
 loadAll = "python3 main.py"
+loadRoster = "python3 -msrc.data_loaders.Roster"
+loadTeam = "python3 -msrc.data_loaders.Team"
 
 [requires]
 python_version = "3.8"

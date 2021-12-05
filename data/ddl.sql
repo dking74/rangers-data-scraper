@@ -675,7 +675,7 @@ CREATE TABLE IF NOT EXISTS public."TeamManagement"
     year integer NOT NULL,
     manager text COLLATE pg_catalog."default" NOT NULL,
     general_manager text COLLATE pg_catalog."default" NOT NULL,
-    president text COLLATE pg_catalog."default" NOT NULL,
+    president text COLLATE pg_catalog."default",
     CONSTRAINT "TeamManagement_pkey" PRIMARY KEY (team_management_id),
     CONSTRAINT "Unique_year_manager_gm_president" UNIQUE (year, manager, general_manager, president),
     CONSTRAINT "year >= 1900" CHECK (year >= 1900)
