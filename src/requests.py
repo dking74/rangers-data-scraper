@@ -17,10 +17,10 @@ def getAllData(dataDict):
       request.key = key
       requests.append(request)
 
-  results = {}
-  for request in as_completed(requests):
-    content = request.result().content
-    results[request.key] = content
+    results = {}
+    for request in as_completed(requests):
+      content = request.result().content
+      results[request.key] = content
 
   return results
 
