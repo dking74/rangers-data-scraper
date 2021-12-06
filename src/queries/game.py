@@ -9,12 +9,9 @@ def insertGameQuery(year_game_dict: dict):
   '''
   Insert game records into Game table.
   
-  :param year_game_dict is dict of dicts, mapping years to a dict
-    of game numbers, that map to the specific game information
+  :param year_game_dict is dict of games, mapping years to a specific game.
     {
-      [year]: {
-        [game_num]: {}
-      }
+      [year]: {}
     }
   '''
 
@@ -24,8 +21,7 @@ def insertGameQuery(year_game_dict: dict):
       {innings},{team_wins_after},{team_losses_after},'{time}',{attendance},
       '{winning_pitcher}','{losing_pitcher}','{saving_pitcher}'
     )'''.format(year=year, **game)
-    for year, game_dict in year_game_dict.items()
-    for _, game in game_dict.items()
+    for year, game in year_game_dict.items()
   ])
 
   return '''

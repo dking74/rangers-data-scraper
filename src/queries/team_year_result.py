@@ -40,7 +40,82 @@ def insertTeamBatYearResultsQuery(year_team_bat_stats_dict: dict):
   ) VALUES {team_year_results}
   ON CONFLICT (year) DO NOTHING;'''.format(team_year_results=team_year_results)
 
-def insertTeamBatYearResultQuery(teamBatYearResult):
+def insertTeamPitchYearResultsQuery(year_team_pitch_stats_dict: dict):
+  team_year_results = ',\n'.join([
+    '''({year},{wins},{losses},{win_percentage},{era},{games},
+    {games_started},{games_finished},{complete_games},{shutouts},
+    {saves},{innings_pitched},{hits},{runs},{earned_runs},{home_runs},
+    {walks},{intentional_walks},{strikeouts},{hbp},{balks},{wild_pitches},
+    {batters_faced},{era_plus},{fip},{whip},{hits_per_9},{bb_per_9},{k_per_9})'''
+    .format(
+      year=year,
+      **team_pitch_stats
+    )
+    for year, team_pitch_stats in year_team_pitch_stats_dict.items()
+  ])
+
+  return '''
+  INSERT INTO public."TeamPitchYearResult" (
+    year,
+    wins,
+    losses,
+    win_percentage,
+    era,
+    games,
+    games_started,
+    games_finished,
+    complete_games,
+    shutouts,
+    saves,
+    innings_pitched,
+    hits,
+    runs,
+    earned_runs,
+    home_runs,
+    walks,
+    intentional_walks,
+    strikeouts,
+    hbp,
+    balks,
+    wild_pitches,
+    batters_faced,
+    era_plus,
+    fip,
+    whip,
+    hits_per_9,
+    bb_per_9,
+    k_per_9
+  ) VALUES {team_year_results}
+  ON CONFLICT (year) DO NOTHING;'''.format(team_year_results=team_year_results)
+
+def insertTeamFieldYearResultsQuery(year_team_field_stats_dict: dict):
+  team_year_results = ',\n'.join([
+    '''({year},{games},{games_started},{innings},{putouts},
+    {assists},{errors},{double_plays},{fielding_percentage},
+    {drs},{drs_per_year})'''.format(
+      year=year,
+      **team_field_stats
+    )
+    for year, team_field_stats in year_team_field_stats_dict.items()
+  ])
+
+  return '''
+  INSERT INTO public."TeamFieldYearResult" (
+    year,
+    games,
+    games_started,
+    innings,
+    putouts,
+    assists,
+    errors,
+    double_plays,
+    fielding_percentage,
+    drs,
+    drs_per_year
+  ) VALUES {team_year_results}
+  ON CONFLICT (year) DO NOTHING;'''.format(team_year_results=team_year_results)
+
+def insertTeamBatYearResultQuery(teamBatYearResult: dict):
   '''
   Insert a TeamBatYearResult object into database.
   '''
@@ -98,7 +173,7 @@ def insertTeamBatYearResultQuery(teamBatYearResult):
     {ibb}
   )'''.format(**teamBatYearResult)
 
-def insertTeamPitchYearResultQuery(teamPitchYearResult):
+def insertTeamPitchYearResultQuery(teamPitchYearResult: dict):
   '''
   Insert a TeamPitchYearResult object into database.
   '''
@@ -167,7 +242,7 @@ def insertTeamPitchYearResultQuery(teamPitchYearResult):
   )
   '''.format(**teamPitchYearResult)
 
-def insertTeamFieldYearResultQuery(teamFieldYearResult):
+def insertTeamFieldYearResultQuery(teamFieldYearResult: dict):
   '''
   Insert a TeamFieldYearResult object into database.
   '''
@@ -224,10 +299,7 @@ def insertTeamYearSplitQuery(year_team_split_dict: dict):
   ) VALUES {team_year_split}
   '''.format(team_year_split=year_team_split_values)
 
-
-def insertAllTeamResultQuery(
-  team_result_year_dict: dict,
-):
+def insertAllTeamResultQuery(team_result_year_dict: dict):
   '''
   Insert all year team results with their associated postseasons.
   '''
@@ -237,11 +309,7 @@ def insertAllTeamResultQuery(
     for year, team_result in team_result_year_dict.items()
   ])
   
-
-def insertTeamResultWithPostseasonQuery(
-    year: int,
-    team_result_dict: dict,
-):
+def insertTeamResultWithPostseasonQuery(year: int, team_result_dict: dict):
   postseason_result_list = team_result_dict['postseason']
 
   # Set the main query for inserting the team results

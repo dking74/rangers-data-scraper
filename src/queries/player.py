@@ -94,10 +94,12 @@ def insertRosterQuery(roster, playerId):
 def insertRosterWithPlayersQuery(year: int, players: list):
   '''Insert roster from a list of players'''
 
-  player_values = ',\n'.join(['''(
-    '{first_name}','{last_name}','{logo}',{age},'{dob}','{country}',
-    '{position}','{bats}','{throws}','{height}',{weight},{years}
-  )'''.format(**player) for player in players])
+  player_values = ',\n'.join([
+    '''(
+      '{first_name}','{last_name}','{logo}',{age},'{dob}','{country}',
+      '{position}','{bats}','{throws}','{height}',{weight},{years}
+    )'''.format(**player) for player in players
+  ])
 
   return '''WITH player_ids as (
     INSERT INTO public."Player" (

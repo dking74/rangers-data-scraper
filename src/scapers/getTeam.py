@@ -6,12 +6,7 @@ from src.utility.string_utils import (
   compilePattern,
   replace_single_quote,
 )
-
-def setCoachDefaults(name):
-  return {
-    'name': name,
-    'coach_type': ''
-  }
+from src.utility.types_utils import setCoachDefaults
 
 def getCoachesByYear(year_team_roster_data: dict = None) -> dict:
   '''
