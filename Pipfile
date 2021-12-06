@@ -15,6 +15,7 @@ requests-futures = "*"
 loadAll = "python3 main.py"
 loadRoster = "python3 -msrc.data_loaders.Roster"
 loadTeam = "python3 -msrc.data_loaders.Team"
+loadGame = "python3 -msrc.data_loaders.Game"
 
 [requires]
 python_version = "3.8"

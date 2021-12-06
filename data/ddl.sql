@@ -431,6 +431,7 @@ CREATE TABLE IF NOT EXISTS public."Game"
     game_id bigserial NOT NULL,
     year integer NOT NULL,
     game_number integer NOT NULL,
+    result character(1) NOT NULL,
     date date NOT NULL,
     month integer,
     opponent text COLLATE pg_catalog."default" NOT NULL,

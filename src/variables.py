@@ -10,3 +10,4 @@ years = variables_config['years'].split(' ')
 team_base_url = 'https://www.baseball-reference.com/teams/TEX'
 team_home_url = team_base_url + '/{year}.shtml'
 team_roster_url = team_base_url + '/{year}-roster.shtml'
+team_schedule_url = team_base_url + '/{year}-schedule-scores.shtml'

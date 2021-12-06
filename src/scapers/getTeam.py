@@ -4,6 +4,7 @@ from src.utility import (
   matchStandardString,
   getOneMatch,
   compilePattern,
+  replace_single_quote,
 )
 
 def setCoachDefaults(name):
@@ -30,6 +31,7 @@ def getCoachesByYear(year_team_roster_data: dict = None) -> dict:
       coach_name_header = coach_row.select_one('th')
       coach_name_link = coach_name_header.select_one('a')
       coach_name: str = coach_name_link.text if coach_name_link is not None else coach_name_header.text
+      coach_name = replace_single_quote(coach_name)
 
       # Create a new player entry for storage and assign name
       # if the entry has not already been created.

@@ -1,5 +1,18 @@
 import re
 
+
+def replace_whitespace(string: str):
+  '''Replace html whitespace chars with empty value'''
+  return regex_sub(r'[\s]', ' ', string)
+
+def replace_single_quote(string: str):
+  '''Database postgres requires single quotes to have two ticks'''
+  return regex_sub(r"'", "''", string)
+
+def regex_sub(regex_pattern, replace_val, string):
+  '''Replace a regex pattern in string with replace_val'''
+  return re.sub(regex_pattern, replace_val, string)
+
 def compilePattern(pattern):
   return re.compile(pattern)
 

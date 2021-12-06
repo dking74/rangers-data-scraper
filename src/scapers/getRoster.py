@@ -1,4 +1,5 @@
 from src.loadHtml import loadTeamRosterHtml
+from src.utility import replace_single_quote
 
 def setPlayerDefaults(first_name: str = '', last_name: str = ''):
   return {
@@ -33,7 +34,7 @@ def getPlayersByYear(year_team_roster_data: dict = None) -> dict:
     players_rows = soup.select('#all_appearances #div_appearances #appearances tbody tr')
     for player_row in players_rows:
       player_name_html = player_row.select_one('th a')
-      player_name: str = player_name_html.contents[0]
+      player_name: str = replace_single_quote(player_name_html.contents[0])
 
       # Create a new player entry for storage and assign name
       # if the entry has not already been created.
