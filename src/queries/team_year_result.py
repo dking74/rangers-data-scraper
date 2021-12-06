@@ -37,8 +37,8 @@ def insertTeamBatYearResultsQuery(year_team_bat_stats_dict: dict):
     hbp,
     sacrifice_fly,
     ibb
-  ) VALUES {team_year_results};
-  '''.format(team_year_results=team_year_results)
+  ) VALUES {team_year_results}
+  ON CONFLICT (year) DO NOTHING;'''.format(team_year_results=team_year_results)
 
 def insertTeamBatYearResultQuery(teamBatYearResult):
   '''

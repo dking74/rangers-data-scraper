@@ -45,6 +45,8 @@ def get_connection():
   '''
 
   global conn
+  if conn is not None and conn.closed:
+    connect()
   return conn or connect()
 
 def __getCursor():
