@@ -1,3 +1,58 @@
+from src.queries.player import getPlayerFromRoster
+
+def insertPlayersBatYearResultQuery(year_player_bat_stats_dict: dict):
+  '''
+  Insert all players-stats by year into database
+  '''
+  player_year_results = ',\n'.join([
+    '''(({player_roster_query}),
+    {year},{games},{plate_appearances},{at_bats},
+    {runs},{hits},{doubles},{triples},{home_runs},{rbis},
+    {stolen_bases},{caught_stealing},{walks},{strikeouts},
+    {batting_average},{obp},{slg},{ops},{ops_plus},{total_bases},
+    {gdp},{hbp},{sacrifice_fly},{ibb})'''.format(
+      player_roster_query=getPlayerFromRoster(
+        player_name.split(' ')[0],
+        player_name.split(' ')[1],
+        year
+      ),
+      year=year,
+      **player_bat_stats
+    )
+    for year, player_bat_dict in year_player_bat_stats_dict.items()
+    for player_name, player_bat_stats in player_bat_dict.items()
+  ])
+
+  return '''
+  INSERT INTO public."PlayerBatYearResult" (
+    player_id,
+    year,
+    games,
+    plate_appearances,
+    at_bats,
+    runs,
+    hits,
+    doubles,
+    triples,
+    home_runs,
+    rbis,
+    stolen_bases,
+    caught_stealing,
+    walks,
+    strikeouts,
+    batting_average,
+    obp,
+    slg,
+    ops,
+    ops_plus,
+    total_bases,
+    gdp,
+    hbp,
+    sacrifice_fly,
+    ibb
+  ) VALUES {player_year_results}
+  ON CONFLICT (year, player_id) DO NOTHING;'''.format(player_year_results=player_year_results)
+
 def insertPlayerBatYearResultQuery(playerBatYearResult, playerId):
   '''
   Insert a PlayerBatYearResult object into database.

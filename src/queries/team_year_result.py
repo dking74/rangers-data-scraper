@@ -1,3 +1,45 @@
+def insertTeamBatYearResultsQuery(year_team_bat_stats_dict: dict):
+  team_year_results = ',\n'.join([
+    '''({year},{games},{plate_appearances},{at_bats},
+    {runs},{hits},{doubles},{triples},{home_runs},{rbis},
+    {stolen_bases},{caught_stealing},{walks},{strikeouts},
+    {batting_average},{obp},{slg},{ops},{ops_plus},{total_bases},
+    {gdp},{hbp},{sacrifice_fly},{ibb})'''.format(
+      year=year,
+      **team_bat_stats
+    )
+    for year, team_bat_stats in year_team_bat_stats_dict.items()
+  ])
+
+  return '''
+  INSERT INTO public."TeamBatYearResult" (
+    year,
+    games,
+    plate_appearances,
+    at_bats,
+    runs,
+    hits,
+    doubles,
+    triples,
+    home_runs,
+    rbis,
+    stolen_bases,
+    caught_stealing,
+    walks,
+    strikeouts,
+    batting_average,
+    obp,
+    slg,
+    ops,
+    ops_plus,
+    total_bases,
+    gdp,
+    hbp,
+    sacrifice_fly,
+    ibb
+  ) VALUES {team_year_results};
+  '''.format(team_year_results=team_year_results)
+
 def insertTeamBatYearResultQuery(teamBatYearResult):
   '''
   Insert a TeamBatYearResult object into database.
@@ -12,7 +54,7 @@ def insertTeamBatYearResultQuery(teamBatYearResult):
     runs,
     hits,
     doubles,
-    tripes,
+    triples,
     home_runs,
     rbis,
     stolen_bases,
@@ -54,10 +96,9 @@ def insertTeamBatYearResultQuery(teamBatYearResult):
     {hbp},
     {sacrifice_fly},
     {ibb}
-  )
-  '''.format(**teamBatYearResult)
+  )'''.format(**teamBatYearResult)
 
-def insertTeamBatYearResultQuery(teamPitchYearResult):
+def insertTeamPitchYearResultQuery(teamPitchYearResult):
   '''
   Insert a TeamPitchYearResult object into database.
   '''
