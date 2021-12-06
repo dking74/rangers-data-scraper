@@ -1,5 +1,5 @@
 from src.loadHtml import loadTeamRosterHtml
-from src.utility import (
+from src.utility.string_utils import (
   getParagraphTeamInfo,
   matchStandardString,
   getOneMatch,

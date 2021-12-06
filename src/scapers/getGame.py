@@ -1,5 +1,5 @@
 from src.loadHtml import loadTeamScheduleHtml
-from src.utility import replace_whitespace, replace_single_quote
+from src.utility.string_utils import replace_whitespace, replace_single_quote
 
 def setGameDefaults(game_number: int):
   return {

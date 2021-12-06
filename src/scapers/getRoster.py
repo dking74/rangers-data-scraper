@@ -1,5 +1,5 @@
 from src.loadHtml import loadTeamRosterHtml
-from src.utility import replace_single_quote
+from src.utility.string_utils import replace_single_quote
 
 def setPlayerDefaults(first_name: str = '', last_name: str = ''):
   return {
