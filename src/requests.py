@@ -3,7 +3,7 @@ from requests_futures.sessions import FuturesSession
 
 defaultSession = FuturesSession(max_workers=10)
 
-def getAllData(dataDict, max_workers=10):
+def getAllData(dataDict):
   '''
   Get data for a dictionary of entries.
 
@@ -11,15 +11,11 @@ def getAllData(dataDict, max_workers=10):
   '''
 
   requests = []
-  with FuturesSession(max_workers=max_workers) as session:
+  with FuturesSession() as session:
     for key, url in dataDict.items():
       request = session.get(url)
       request.key = key
       requests.append(request)
-
-  # Not shown in docs, but explicitly close the session so that we can close
-  # the connection pool and not try to use it again in future.
-  session.close()
 
   results = {}
   for request in as_completed(requests):
