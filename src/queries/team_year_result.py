@@ -183,43 +183,73 @@ def insertTeamYearSplitQuery(year_team_split_dict: dict):
   ) VALUES {team_year_split}
   '''.format(team_year_split=year_team_split_values)
 
-def insertTeamResultWithPostseason(
+
+def insertAllTeamResultQuery(
+  team_result_year_dict: dict,
+):
+  '''
+  Insert all year team results with their associated postseasons.
+  '''
+
+  return '\n'.join([
+    insertTeamResultWithPostseasonQuery(year, team_result)
+    for year, team_result in team_result_year_dict.items()
+  ])
+  
+
+def insertTeamResultWithPostseasonQuery(
     year: int,
     team_result_dict: dict,
-    postseason_result_list: list,
 ):
+  postseason_result_list = team_result_dict['postseason']
+
+  # Set the main query for inserting the team results
+  insert_team_result_query = '''
+  INSERT INTO public."TeamResult" (
+    year,
+    wins,
+    losses,
+    ties,
+    division_place,
+    attendance
+  ) VALUES (
+    {year},{wins},{losses},{ties},{division_place},{attendance}
+  )
+  ON CONFLICT (year) DO UPDATE SET year = EXCLUDED.year
+  RETURNING team_result_id'''.format(
+    year=year,
+    wins=team_result_dict['wins'],
+    losses=team_result_dict['losses'],
+    ties=team_result_dict['ties'],
+    division_place=team_result_dict['division_place'],
+    attendance=team_result_dict['attendance'],
+  )
+
+  # Check if the postseason has entries. If so, we need to append that
+  # value list and add the postseason entry in the database.
+  if len(postseason_result_list) ==  0:
+    return '{0};'.format(insert_team_result_query)
+  
   postseason_result_values = ',\n'.join([
-    '''(team_result_id,'{series_name}','{opponent}','{result}')'''.format(**result)
+    '''((SELECT team_result_id FROM team_result),'{series_name}','{opponent}','{result}')'''.format(**result)
     for result in postseason_result_list
   ])
 
-  return '''WITH team_result_id as (
-    INSERT INTO public."TeamResult" (
-      year,
-      wins,
-      losses,
-      ties,
-      division_place,
-      attendance
-    ) VALUES (
-      {year},{wins},{losses},{ties},{division_place},{attendance}
-    )
-      ON CONFLICT (year) DO UPDATE SET year = EXCLUDED.year
-      RETURNING team_result_id
-  )
-  INSERT INTO public."TeamPostseasonResult" (
+  postseason_entry = '''INSERT INTO public."TeamPostseasonResult" (
     team_result_id,
     series_name,
     opponent,
-    resultpostseason_result_valu
+    result
   )
   VALUES {postseason_result_values}
-  ON CONFLICT (year, series_name) DO NOTHING;'''.format(
-    year=year,
-    wins=team_result_dict.wins,
-    losses=team_result_dict.losses,
-    ties=team_result_dict.ties,
-    division_place=team_result_dict.division_place,
-    attendance=team_result_dict.attendance,
+  ON CONFLICT (team_result_id, series_name) DO NOTHING;'''.format(
     postseason_result_values=postseason_result_values
+  )
+
+  return '''WITH team_result as (
+    {insert_team_result_query}
+  )
+  {postseason_entry}'''.format(
+    insert_team_result_query=insert_team_result_query,
+    postseason_entry=postseason_entry,
   )

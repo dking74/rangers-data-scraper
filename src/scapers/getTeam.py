@@ -1,5 +1,10 @@
-import re
 from src.loadHtml import loadTeamRosterHtml
+from src.utility import (
+  getParagraphTeamInfo,
+  matchStandardString,
+  getOneMatch,
+  compilePattern,
+)
 
 def setCoachDefaults(name):
   return {
@@ -40,13 +45,6 @@ def getCoachesByYear(year_team_roster_data: dict = None) -> dict:
 
   return coaches_year_data
 
-def __getParagraphTeamInfo(paragraph_info_section):
-  link = paragraph_info_section.find('a')
-  return re.match(
-    r"[A-Za-z\s ]+",
-    link.text if link is not None else paragraph_info_section.contents[2]
-  ).group(0).strip()
-
 def getManagementByYear(year_team_roster_data: dict = None) -> dict:
   '''
   Find team management in html for each year.
@@ -62,15 +60,81 @@ def getManagementByYear(year_team_roster_data: dict = None) -> dict:
       'president': '',
       'general_manager': ''
     }
-    soup = year_team_roster_data[year]
+    # soup = year_team_roster_data[year]
     team_info_section = soup.select('#info #meta div[data-template="Partials/Teams/Summary"] p')
     for section in team_info_section:
       header = section.find('strong').text.strip()
       if header == 'Manager:' or header == 'Managers:':
-        team_management_year_data[year]['manager'] = __getParagraphTeamInfo(section)
+        team_management_year_data[year]['manager'] = getParagraphTeamInfo(section)
       if header == 'President:':
-        team_management_year_data[year]['president'] = __getParagraphTeamInfo(section)
+        team_management_year_data[year]['president'] = getParagraphTeamInfo(section)
       if header == 'General Manager:':
-        team_management_year_data[year]['general_manager'] = __getParagraphTeamInfo(section)
+        team_management_year_data[year]['general_manager'] = getParagraphTeamInfo(section)
 
   return team_management_year_data
+
+def getTeamResultByYear(year_team_roster_data: dict = None) -> dict:
+  '''
+  Find team result in html for each year.
+  '''
+
+  if year_team_roster_data is None:
+    year_team_roster_data = loadTeamRosterHtml()
+
+  team_result_year_data = {}
+  for year, soup in year_team_roster_data.items():
+    team_result_year_data[year] = {
+      'wins': 0,
+      'losses': 0,
+      'ties': 0,
+      'division_place': 1,
+      'attendance': 0,
+      'postseason': []
+    }
+    team_info_section = soup.select('#info #meta div[data-template="Partials/Teams/Summary"] p')
+    for section in team_info_section:
+      header = section.find('strong')
+      header_text = header.text.strip()
+      header_contents = section.contents[2]
+      if header_text == 'Record:':
+        record_place_entry = header_contents.split(',')
+
+        # Parse the record field into wins/losses/ties
+        record = matchStandardString(record_place_entry[0]).split('-')
+        team_result_year_data[year]['wins'] = int(record[0])
+        team_result_year_data[year]['losses'] = int(record[1])
+        team_result_year_data[year]['ties'] = int(record[2])
+        
+        # Parse the divison finishing field and get place of team
+        place_record = matchStandardString(record_place_entry[1])
+        place = getOneMatch(r"\d", place_record)
+        team_result_year_data[year]['division_place'] = int(place)
+      if header_text == 'Postseason:':
+        # Get the series result (win or lost)
+        series_results_unfiltered = section.find_all(string=compilePattern('Lost|Won'))
+        series_results = [
+          'win' if series_result.strip() == 'Lost' else 'loss'
+          for series_result in series_results_unfiltered
+        ]
+
+        # Get the series titles
+        series_type_tags = section.find_all('a', title=False)
+        series_types = [getOneMatch(r"[A-Za-z ]+", series_type.text) for series_type in series_type_tags]
+
+        # Get the series opponents
+        series_opponents_tags = section.find_all('a', title=True)
+        series_opponents = [opponent_tag.text for opponent_tag in series_opponents_tags]
+
+        postseason_results = []
+        for i in range(len(series_results)):
+          postseason_results.append({
+            'series_name': '' if len(series_types) < i + 1 else series_types[i],
+            'opponent': '' if len(series_opponents) < i + 1 else series_opponents[i],
+            'result': '' if len(series_results) < i + 1 else series_results[i],
+          })
+        team_result_year_data[year]['postseason'] = postseason_results
+      if header_text == 'Attendance:':
+        attendance = getOneMatch(r"[\d,]+", header_contents)
+        team_result_year_data[year]['attendance'] = int(attendance.replace(",", ""))
+
+  return team_result_year_data
