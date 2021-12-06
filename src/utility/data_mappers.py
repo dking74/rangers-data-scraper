@@ -1,5 +1,5 @@
 from src.utility.string_utils import replace_whitespace, replace_single_quote
-from src.utility.types_utils import setBattingStatsDefaults, setGameDefaults, setPitchingStatsDefaults, setPlayerDefaults
+from src.utility.types_utils import setBattingStatsDefaults, setFieldingStatsDefaults, setGameDefaults, setPitchingStatsDefaults, setPlayerDefaults
 
 def mapGameData(game_number: int, game_data_vals: list):
   game_data = setGameDefaults(game_number)
@@ -148,7 +148,7 @@ def mapBattingData(data_cols: list):
   return current_data
 
 def mapPitchingData(data_cols: list):
-  '''Helper method to load batting data based on a row in data'''
+  '''Helper method to load pitching data based on a row in data'''
   current_data = setPitchingStatsDefaults()
   for data_col in data_cols:
     stat = data_col.attrs['data-stat']
@@ -210,4 +210,34 @@ def mapPitchingData(data_cols: list):
     if stat == 'strikeouts_per_nine':
       current_data['k_per_9'] = float(data_col.text) if data_col.text else float('0.000')
 
+  return current_data
+
+def mapFieldingData(data_cols: list):
+  '''Helper method to load fielding data based on a row in data'''
+  current_data = setFieldingStatsDefaults()
+  for data_col in data_cols:
+    stat = data_col.attrs['data-stat']
+
+    if stat == 'G':
+      current_data['games'] = int(data_col.text) if data_col.text else 0
+    if stat == 'GS':
+      current_data['games_started'] = int(data_col.text) if data_col.text else 0
+    if stat == 'Inn_def':
+      current_data['innings'] = float(data_col.text) if data_col.text else float('0.0')
+    if stat == 'chances':
+      current_data['chances'] = int(data_col.text) if data_col.text else 0
+    if stat == 'PO':
+      current_data['putouts'] = int(data_col.text) if data_col.text else 0
+    if stat == 'A':
+      current_data['assists'] = int(data_col.text) if data_col.text else 0
+    if stat == 'E_def':
+      current_data['errors'] = int(data_col.text) if data_col.text else 0
+    if stat == 'DP_def':
+      current_data['double_plays'] = int(data_col.text) if data_col.text else 0
+    if stat == 'fielding_perc':
+      current_data['fielding_percentage'] = float(data_col.text) if data_col.text else float('0.000')
+    if stat == 'bis_runs_total':
+      current_data['drs'] = float(data_col.text) if data_col.text else float('0.00')
+    if stat == 'bis_runs_total_per_season':
+      current_data['drs_per_year'] = float(data_col.text) if data_col.text else float('0.00')
   return current_data

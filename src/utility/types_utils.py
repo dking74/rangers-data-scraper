@@ -96,3 +96,18 @@ def setPitchingStatsDefaults():
     'bb_per_9': 0,
     'k_per_9': 0,
   }
+
+def setFieldingStatsDefaults():
+  return {
+    'games': 0,
+    'games_started': 0,
+    'innings': 0,
+    'chances': 0,
+    'putouts': 0,
+    'assists': 0,
+    'errors': 0,
+    'double_plays': 0,
+    'fielding_percentage': float('0.000'),
+    'drs': 0,
+    'drs_per_year': 0
+  }

@@ -1,7 +1,13 @@
 from bs4 import BeautifulSoup
 
 from src.requests import getHtmlData, getAllData
-from src.variables import years, team_home_url, team_roster_url, team_schedule_url
+from src.variables import (
+  years,
+  team_home_url,
+  team_roster_url,
+  team_schedule_url,
+  team_fielding_url
+)
 
 def loadAllHtml(urlMapping):
   '''
@@ -78,3 +84,20 @@ def loadTeamScheduleHtml():
     year_dict[year] = team_schedule_url.format(year=year)
   team_schedule_data_html = loadAllHtml(year_dict)
   return team_schedule_data_html
+
+# Global to not have to load schedule html page more than once
+# and return the cached version while in same script run.
+team_fielding_data_html = None
+def loadTeamFieldingHtml():
+  '''Load html for the fielding page of team for all years'''
+
+  global team_fielding_data_html
+
+  if team_fielding_data_html is not None:
+    return team_fielding_data_html
+
+  year_dict = {}
+  for year in years:
+    year_dict[year] = team_fielding_url.format(year=year)
+  team_fielding_data_html = loadAllHtml(year_dict)
+  return team_fielding_data_html

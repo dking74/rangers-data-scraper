@@ -3,6 +3,12 @@ from src.queries.team import insertTeamCoachQuery, insertTeamManagementQuery
 from src.queries.team_year_result import insertAllTeamResultQuery
 from src.database import write_query
 
+print(
+  '\n\n#########################################\n'
+  '# Inserting Team data\n'
+  '#########################################'
+)
+
 # Insert TeamCoach entries
 coachesByYear = getCoachesByYear()
 insertCoachesQuery = insertTeamCoachQuery(coachesByYear)
