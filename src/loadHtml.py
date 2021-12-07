@@ -101,3 +101,24 @@ def loadTeamFieldingHtml():
     year_dict[year] = team_fielding_url.format(year=year)
   team_fielding_data_html = loadAllHtml(year_dict)
   return team_fielding_data_html
+
+year_boxscore_mappings = None
+def loadTeamPlayerGameDataHtml(year_game_boxscore_dict):
+  '''
+  Loads boxscore data html pages for multiple entered years.
+
+  :note This method will probably be replaced in future.
+    Basically, we are loading 162 * years webpages, so its understandably
+    very long. But it still very inefficient and needs to be improved accordingly.
+  '''
+  global year_boxscore_mappings
+
+  if year_boxscore_mappings is not None:
+    return year_boxscore_mappings
+
+  year_boxscore_dict = {}
+  for year, boxscore_dict in year_game_boxscore_dict.items():
+    year_boxscore_dict[year] = loadAllHtml(boxscore_dict)
+  year_boxscore_mappings = year_boxscore_dict
+
+  return year_boxscore_mappings

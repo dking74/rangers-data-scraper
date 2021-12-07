@@ -101,7 +101,6 @@ def getTeamAndPlayerFieldDataByYear(year_team_fielding_data: dict = None) -> dic
 
   if year_team_fielding_data is None:
     year_team_fielding_data = loadTeamFieldingHtml()
-  print('Team Fielding data...', year_team_fielding_data)
 
   team_player_year_data = {}
   # Go through each entry of soup content loaded from remote resource
