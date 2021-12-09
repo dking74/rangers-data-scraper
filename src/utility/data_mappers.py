@@ -201,11 +201,11 @@ def mapPitchingData(data_cols: list):
       current_data['era_plus'] = int(data_col.text) if data_col.text else 0
     if stat == 'fip':
       current_data['fip'] = float(data_col.text) if data_col.text else float('0.00')
-    if stat == 'whp':
+    if stat == 'whip':
       current_data['whip'] = float(data_col.text) if data_col.text else float('0.000')
     if stat == 'hits_per_nine':
       current_data['hits_per_9'] = float(data_col.text) if data_col.text else float('0.000')
-    if stat == 'bb_per_nine':
+    if stat == 'bases_on_balls_per_nine':
       current_data['bb_per_9'] = float(data_col.text) if data_col.text else float('0.000')
     if stat == 'strikeouts_per_nine':
       current_data['k_per_9'] = float(data_col.text) if data_col.text else float('0.000')

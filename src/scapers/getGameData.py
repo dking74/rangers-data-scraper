@@ -38,7 +38,7 @@ def getTeamAndPlayerData(year_team_schedule_data: dict = None):
       team_year_boxscore_mappings[year][game_number] = boxscore_link
 
   soup =loadHtml('https://www.baseball-reference.com/boxes/KCA/KCA202104010.shtml')
-  print(soup.select_one('#all_TexasRangersbatting'))
+  # print(soup.select_one('#all_TexasRangersbatting'))
 #   year_game_data = {}
 
 #   year_game_mappings = loadTeamPlayerGameDataHtml(team_year_boxscore_mappings)
