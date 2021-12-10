@@ -33,7 +33,7 @@ def getGamesByYear(year_team_schedule_data: dict = None) -> dict:
         game_data[game_number] = {}
 
       game_data_vals = game_row.select('td')
-      game_data = mapGameData(game_number, game_data_vals)
+      game_data[game_number] = mapGameData(game_number, game_data_vals)
     year_game_data[year] = game_data
 
   return year_game_data
