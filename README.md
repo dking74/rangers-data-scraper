@@ -13,6 +13,7 @@ psql -U {user} -p {port} -d {database} -f ./data/ddl.sql
 
 - To run the scraper locally, you need to add database credentials. The database credentials should be stored in the [Database Config File](./config/database.ini). If the file is not present you will need to create it, and have it have the following entries:
 ```sh
+[postgres]
 host=
 database=
 user=
