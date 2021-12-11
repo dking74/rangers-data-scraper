@@ -20,7 +20,7 @@ def getCoachesByYear(year_team_roster_data: dict = None) -> dict:
   # and create a Coach entry found from within html
   coaches_year_data = {}
   for year, soup in year_team_roster_data.items():
-    coaches_data = {}
+    coaches_data = []
     coach_rows = soup.select('#all_coaches #div_coaches #coaches tbody tr')
     for coach_row in coach_rows:
       coach_name_header = coach_row.select_one('th')
@@ -28,17 +28,17 @@ def getCoachesByYear(year_team_roster_data: dict = None) -> dict:
       coach_name: str = coach_name_link.text if coach_name_link is not None else coach_name_header.text
       coach_name = replace_single_quote(coach_name)
 
-      # Create a new player entry for storage and assign name
-      # if the entry has not already been created.
-      if coach_name not in coaches_data:
-        coaches_data[coach_name] = setCoachDefaults(coach_name)
+      # Set initial, default coach data
+      coach_data = setCoachDefaults(coach_name)
 
-      coach_data = coach_row.select('td')
-      for data_td in coach_data:
+      coach_td_data = coach_row.select('td')
+      for data_td in coach_td_data:
         data_stat = data_td.attrs['data-stat']
         if data_stat == 'coach_type':
-          coaches_data[coach_name]['coach_type'] = data_td.text
-      coaches_year_data[year] = coaches_data.values()
+          coach_data['coach_type'] = data_td.text
+      if coach_data['coach_type'] != 'Manager':
+        coaches_data.append(coach_data)
+    coaches_year_data[year] = coaches_data
 
   return coaches_year_data
 
