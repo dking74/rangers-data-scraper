@@ -110,7 +110,7 @@ def getTeamResultByYear(year_team_roster_data: dict = None) -> dict:
         # Get the series result (win or lost)
         series_results_unfiltered = section.find_all(string=compilePattern('Lost|Won'))
         series_results = [
-          'win' if series_result.strip() == 'Lost' else 'loss'
+          'loss' if series_result.strip() == 'Lost' else 'win'
           for series_result in series_results_unfiltered
         ]
 
