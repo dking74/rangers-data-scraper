@@ -76,7 +76,7 @@ def insertPlayersPitchYearResultQuery(year_player_pitch_stats_dict: dict):
       **player_pitch_stats
     )
     for year, player_pitch_dict in year_player_pitch_stats_dict.items()
-    for player_name, player_pitch_stats in list(player_pitch_dict.items())[:1]
+    for player_name, player_pitch_stats in player_pitch_dict.items()
   ])
 
   return '''
